@@ -1,0 +1,253 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+.wrap{background:#f0f4f2;min-height:600px;padding:1.5rem 1rem;font-family:system-ui,sans-serif;}
+.phone{max-width:400px;margin:0 auto;background:#fff;border-radius:20px;border:2px solid #5DCAA5;overflow:hidden;}
+.top-bar{background:#1D9E75;padding:1rem 1.25rem 1.25rem;color:#fff;}
+.top-bar h1{font-size:19px;font-weight:600;letter-spacing:-0.3px;}
+.top-bar p{font-size:12px;opacity:0.82;margin-top:2px;}
+.top-bar .user-row{display:flex;justify-content:space-between;align-items:center;margin-top:8px;}
+.top-bar .user-chip{font-size:11px;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.3);border-radius:20px;padding:3px 10px;color:#fff;}
+.top-bar .btn-sal{font-size:11px;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:8px;padding:4px 10px;color:#fff;cursor:pointer;}
+.body{padding:1rem;}
+.screen{display:none;}
+.screen.active{display:block;}
+.nav{display:flex;gap:6px;margin-bottom:1rem;background:#f0f4f2;border-radius:10px;padding:4px;}
+.nav-btn{flex:1;padding:7px 4px;font-size:12px;font-weight:500;border:none;border-radius:8px;background:transparent;color:#5F5E5A;cursor:pointer;transition:all 0.15s;}
+.nav-btn.active{background:#fff;color:#0F6E56;border:1px solid #9FE1CB;}
+label{display:block;font-size:12px;color:#5F5E5A;margin-bottom:5px;font-weight:500;}
+input,select{width:100%;padding:10px 12px;font-size:14px;border:1.5px solid #d4ede5;border-radius:10px;background:#fff;color:#2C2C2A;font-family:inherit;transition:border 0.15s;}
+input:focus,select:focus{outline:none;border-color:#1D9E75;}
+.field{margin-bottom:12px;}
+.btn-main{width:100%;padding:12px;font-size:14px;font-weight:600;border:none;border-radius:10px;background:#1D9E75;color:#fff;cursor:pointer;letter-spacing:0.2px;}
+.btn-main:hover{background:#0F6E56;}
+.preview{background:#E1F5EE;border:1.5px solid #9FE1CB;border-radius:10px;padding:12px;margin:10px 0;display:none;}
+.preview-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;}
+.preview-row .k{font-size:12px;color:#085041;}
+.preview-row .v{font-size:14px;font-weight:600;color:#0F6E56;}
+.preview-title{font-size:11px;font-weight:600;color:#0F6E56;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:6px;}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:1rem;}
+.metric{background:#f0f4f2;border:1.5px solid #9FE1CB;border-radius:10px;padding:10px 8px;text-align:center;}
+.metric .ml{font-size:10px;color:#5F5E5A;font-weight:500;margin-bottom:3px;}
+.metric .mv{font-size:14px;font-weight:700;color:#0F6E56;}
+.section-title{font-size:13px;font-weight:600;color:#2C2C2A;margin-bottom:8px;}
+.sel-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.scroll-t{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:12px;table-layout:fixed;}
+th{font-weight:600;color:#5F5E5A;text-align:right;padding:7px 4px;border-bottom:1.5px solid #9FE1CB;font-size:11px;background:#f9fdfb;}
+th:first-child{text-align:left;}
+td{text-align:right;padding:7px 4px;border-bottom:1px solid #e8f5ef;color:#2C2C2A;}
+td:first-child{text-align:left;color:#5F5E5A;}
+tr:hover td{background:#f9fdfb;}
+tr.tot td{font-weight:700;color:#0F6E56;background:#E1F5EE;border-top:1.5px solid #5DCAA5;}
+.err{font-size:12px;color:#A32D2D;margin-top:6px;display:none;background:#FCEBEB;border-radius:8px;padding:6px 10px;}
+.ok-msg{font-size:12px;color:#085041;margin-top:6px;display:none;background:#E1F5EE;border-radius:8px;padding:6px 10px;}
+.del-btn{font-size:10px;padding:3px 7px;border:1px solid #F09595;border-radius:6px;background:transparent;cursor:pointer;color:#A32D2D;}
+
+.login-logo{width:56px;height:56px;border-radius:16px;background:#1D9E75;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;color:#fff;font-size:22px;font-weight:700;}
+.login-title{text-align:center;font-size:17px;font-weight:700;color:#2C2C2A;margin-bottom:4px;}
+.login-sub{text-align:center;font-size:12px;color:#5F5E5A;margin-bottom:1.5rem;}
+.divider{height:1px;background:#e8f5ef;margin:1rem 0;}
+</style>
+
+<div class="wrap">
+<div class="phone">
+
+<div id="screen-login" class="screen active">
+  <div style="padding:2rem 1.25rem 1.25rem;">
+    <div class="login-logo">%</div>
+    <div class="login-title">Calculadora IVA</div>
+    <div class="login-sub">Chile · IVA 19%</div>
+    <div class="field"><label>RUT</label><input type="text" id="inp-rut" placeholder="12.345.678-9" maxlength="12"/></div>
+    <div class="field"><label>Correo electrónico</label><input type="email" id="inp-email" placeholder="correo@ejemplo.cl"/></div>
+    <div class="err" id="login-err">RUT o correo inválido.</div>
+    <div style="margin-top:16px;"><button class="btn-main" onclick="doLogin()">Ingresar</button></div>
+    <div class="divider"></div>
+    <p style="text-align:center;font-size:11px;color:#888780;">IVA = 19% · Neto = Total ÷ 1.19</p>
+  </div>
+</div>
+
+<div id="screen-main" class="screen">
+  <div class="top-bar">
+    <h1>Calculadora IVA</h1>
+    <p>Registro mensual · Chile 19%</p>
+    <div class="user-row">
+      <span class="user-chip" id="user-chip">—</span>
+      <button class="btn-sal" onclick="doLogout()">Salir</button>
+    </div>
+  </div>
+  <div class="body">
+    <div class="nav">
+      <button class="nav-btn active" id="nb-calc" onclick="tab('calc')">Calcular</button>
+      <button class="nav-btn" id="nb-reg" onclick="tab('reg')">Registro</button>
+      <button class="nav-btn" id="nb-mes" onclick="tab('mes')">Mes</button>
+    </div>
+
+    <div id="t-calc">
+      <div class="field"><label>Fecha</label><input type="date" id="inp-fecha"/></div>
+      <div class="field"><label>Monto total con IVA ($)</label><input type="number" id="inp-monto" placeholder="Ej: 30.000" min="0" oninput="preview()"/></div>
+      <div class="preview" id="prev-box">
+        <div class="preview-title">Desglose</div>
+        <div class="preview-row"><span class="k">Monto neto (sin IVA)</span><span class="v" id="p-neto">—</span></div>
+        <div class="preview-row"><span class="k">IVA 19%</span><span class="v" id="p-iva">—</span></div>
+      </div>
+      <button class="btn-main" onclick="guardar()">Guardar registro</button>
+      <div class="err" id="calc-err">Ingresa fecha y monto válidos.</div>
+      <div class="ok-msg" id="calc-ok">Registro guardado correctamente.</div>
+    </div>
+
+    <div id="t-reg" style="display:none;">
+      <div class="sel-row">
+        <span class="section-title">Registros</span>
+        <select id="sel-r" onchange="renderTabla()" style="width:auto;font-size:12px;padding:5px 8px;"></select>
+      </div>
+      <div class="scroll-t"><table>
+        <thead><tr><th style="width:30%">Fecha</th><th>Total</th><th>Neto</th><th>IVA</th><th style="width:24px"></th></tr></thead>
+        <tbody id="tb-reg"></tbody>
+      </table></div>
+    </div>
+
+    <div id="t-mes" style="display:none;">
+      <div class="sel-row">
+        <span class="section-title">Resumen</span>
+        <select id="sel-m" onchange="renderMes()" style="width:auto;font-size:12px;padding:5px 8px;"></select>
+      </div>
+      <div class="metrics">
+        <div class="metric"><div class="ml">Total c/IVA</div><div class="mv" id="m-tot">—</div></div>
+        <div class="metric"><div class="ml">Neto</div><div class="mv" id="m-net">—</div></div>
+        <div class="metric"><div class="ml">IVA</div><div class="mv" id="m-iva">—</div></div>
+      </div>
+      <div class="scroll-t"><table>
+        <thead><tr><th style="width:30%">Fecha</th><th>Total</th><th>Neto</th><th>IVA</th></tr></thead>
+        <tbody id="tb-mes"></tbody>
+      </table></div>
+    </div>
+  </div>
+</div>
+
+</div>
+</div>
+
+<script>
+const IVA=0.19;
+let usr=null,regs={};
+const fmt=n=>'$'+Math.round(n).toLocaleString('es-CL');
+const calcN=t=>({neto:Math.round(t/(1+IVA)),iva:Math.round(t)-Math.round(t/(1+IVA))});
+
+function vrut(r){
+  r=r.replace(/\./g,'').replace(/-/g,'').toUpperCase();
+  if(r.length<2)return false;
+  const dv=r.slice(-1),n=parseInt(r.slice(0,-1));
+  if(isNaN(n))return false;
+  let s=0,m=2,x=n;
+  while(x>0){s+=(x%10)*m;x=Math.floor(x/10);m=m===7?2:m+1;}
+  const e=11-(s%11);
+  return dv===(e===11?'0':e===10?'K':String(e));
+}
+function vemail(e){return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e);}
+
+function doLogin(){
+  const r=document.getElementById('inp-rut').value.trim();
+  const e=document.getElementById('inp-email').value.trim();
+  const err=document.getElementById('login-err');
+  if(!vrut(r)||!vemail(e)){err.style.display='block';return;}
+  err.style.display='none';
+  usr={rut:r,email:e};
+  const k='iva_'+r.replace(/\./g,'');
+  try{const s=localStorage.getItem(k);regs=s?JSON.parse(s):{};}catch(ex){regs={};}
+  document.getElementById('user-chip').textContent=r;
+  document.getElementById('screen-login').classList.remove('active');
+  document.getElementById('screen-main').classList.add('active');
+  document.getElementById('inp-fecha').value=new Date().toISOString().slice(0,10);
+  poblar();
+}
+function doLogout(){
+  usr=null;regs={};
+  document.getElementById('screen-main').classList.remove('active');
+  document.getElementById('screen-login').classList.add('active');
+}
+function key(){return 'iva_'+usr.rut.replace(/\./g,'');}
+function save(){try{localStorage.setItem(key(),JSON.stringify(regs));}catch(e){}}
+
+function getMeses(){
+  const s=new Set(Object.keys(regs).map(d=>d.slice(0,7)));
+  s.add(new Date().toISOString().slice(0,7));
+  return Array.from(s).sort().reverse();
+}
+const mLabel=m=>{const[y,mo]=m.split('-');return['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'][parseInt(mo)-1]+' '+y;};
+
+function poblar(){
+  const ms=getMeses();
+  ['sel-r','sel-m'].forEach(id=>{
+    const s=document.getElementById(id);
+    s.innerHTML=ms.map(m=>`<option value="${m}">${mLabel(m)}</option>`).join('');
+  });
+  renderTabla();renderMes();
+}
+function tab(t){
+  ['calc','reg','mes'].forEach(n=>{
+    document.getElementById('t-'+n).style.display=n===t?'block':'none';
+    document.getElementById('nb-'+n).className='nav-btn'+(n===t?' active':'');
+  });
+  if(t==='reg')renderTabla();
+  if(t==='mes')renderMes();
+}
+function preview(){
+  const m=parseFloat(document.getElementById('inp-monto').value);
+  const b=document.getElementById('prev-box');
+  if(!m||m<=0){b.style.display='none';return;}
+  const{neto,iva}=calcN(m);
+  document.getElementById('p-neto').textContent=fmt(neto);
+  document.getElementById('p-iva').textContent=fmt(iva);
+  b.style.display='block';
+}
+function guardar(){
+  const f=document.getElementById('inp-fecha').value;
+  const m=parseFloat(document.getElementById('inp-monto').value);
+  const err=document.getElementById('calc-err'),ok=document.getElementById('calc-ok');
+  if(!f||!m||m<=0){err.style.display='block';ok.style.display='none';return;}
+  err.style.display='none';
+  const{neto,iva}=calcN(m);
+  regs[f]={total:Math.round(m),neto,iva};
+  save();
+  ok.style.display='block';
+  setTimeout(()=>ok.style.display='none',2200);
+  document.getElementById('inp-monto').value='';
+  document.getElementById('prev-box').style.display='none';
+  poblar();
+}
+function renderTabla(){
+  const mes=document.getElementById('sel-r').value;
+  const dias=Object.keys(regs).filter(d=>d.startsWith(mes)).sort();
+  const tb=document.getElementById('tb-reg');
+  if(!dias.length){tb.innerHTML='<tr><td colspan="5" style="text-align:center;padding:16px;color:#888780;">Sin registros</td></tr>';return;}
+  tb.innerHTML=dias.map(d=>{
+    const r=regs[d];const[y,m,dd]=d.split('-');
+    return `<tr><td>${dd}-${m}-${y}</td><td>${fmt(r.total)}</td><td>${fmt(r.neto)}</td><td>${fmt(r.iva)}</td><td><button class="del-btn" onclick="del('${d}')">✕</button></td></tr>`;
+  }).join('');
+}
+function del(f){
+  if(!confirm('¿Eliminar '+f+'?'))return;
+  delete regs[f];save();poblar();
+}
+function renderMes(){
+  const mes=document.getElementById('sel-m').value;
+  const dias=Object.keys(regs).filter(d=>d.startsWith(mes)).sort();
+  let tB=0,tN=0,tI=0;
+  const tb=document.getElementById('tb-mes');
+  if(!dias.length){
+    tb.innerHTML='<tr><td colspan="4" style="text-align:center;padding:16px;color:#888780;">Sin registros</td></tr>';
+    ['m-tot','m-net','m-iva'].forEach(id=>document.getElementById(id).textContent='—');
+    return;
+  }
+  tb.innerHTML=dias.map(d=>{
+    const r=regs[d];tB+=r.total;tN+=r.neto;tI+=r.iva;
+    const[y,m,dd]=d.split('-');
+    return `<tr><td>${dd}-${m}-${y}</td><td>${fmt(r.total)}</td><td>${fmt(r.neto)}</td><td>${fmt(r.iva)}</td></tr>`;
+  }).join('')+`<tr class="tot"><td>Total mes</td><td>${fmt(tB)}</td><td>${fmt(tN)}</td><td>${fmt(tI)}</td></tr>`;
+  document.getElementById('m-tot').textContent=fmt(tB);
+  document.getElementById('m-net').textContent=fmt(tN);
+  document.getElementById('m-iva').textContent=fmt(tI);
+}
+document.getElementById('inp-fecha').value=new Date().toISOString().slice(0,10);
+</script>
